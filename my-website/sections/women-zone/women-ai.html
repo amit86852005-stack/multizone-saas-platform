@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistant | Women Zone</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .ai-wrapper {
+            max-width: 800px;
+            margin: 100px auto;
+            padding: 0 1.5rem;
+        }
+
+        .chat-box {
+            padding: 2.5rem;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .prompt-area {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .ai-textarea {
+            width: 100%;
+            padding: 1.5rem;
+            padding-right: 4rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            color: var(--text);
+            font-size: 1.1rem;
+            resize: none;
+            transition: var(--transition);
+        }
+
+        .ai-textarea:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--secondary);
+            /* restrained focus shadow */
+            box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+        }
+
+        .send-btn {
+            position: absolute;
+            right: 0.75rem;
+            bottom: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .response-area {
+            flex-grow: 1;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .dot {
+            width: 4px;
+            height: 4px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1.0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="scrolled">
+        <a href="../../index.html" class="logo">MultiZone Women</a>
+        <div class="nav-links">
+            <a href="women-home.html">Women Zone</a>
+            <div class="glass"
+                style="padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; background: rgba(59, 130, 246, 0.06); color: var(--secondary); border: 1px solid var(--secondary);">
+                Assistant Online
+            </div>
+        </div>
+    </nav>
+
+    <div class="ai-wrapper">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Your Assistant</h1>
+            <p style="color: var(--text-muted)">Here to support you with safety, health, and practical guidance.</p>
+        </div>
+
+        <div class="chat-box glass reveal">
+            <div class="prompt-area">
+                <textarea id="aiPrompt" class="ai-textarea" rows="3"
+                    placeholder="Ask about safety tips, health advice, or simply chat..."></textarea>
+                <button class="send-btn" onclick="askAI()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+
+            <div id="typing" class="typing-indicator">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <span>Assistant is processing...</span>
+            </div>
+
+            <div id="aiResponse" class="response-area">
+                <h4 style="color: var(--secondary); margin-bottom: 1rem;"><i class="fas fa-robot"></i> Assistant Response:</h4>
+                <div id="responseText" style="line-height: 1.7;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/main.js"></script>
+    <script>
+        async function askAI() {
+            if (typeof canUseAI === 'function' && !canUseAI()) return;
+
+            const prompt = document.getElementById("aiPrompt").value;
+            const typing = document.getElementById("typing");
+            const responseArea = document.getElementById("aiResponse");
+            const responseText = document.getElementById("responseText");
+            const sendBtn = document.querySelector('.send-btn');
+
+            if (!prompt.trim()) {
+                alert("Please enter a topic or question!");
+                return;
+            }
+
+            // UI State
+            typing.style.display = "flex";
+            responseArea.style.display = "none";
+            document.getElementById("aiPrompt").value = "";
+            sendBtn.disabled = true;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/ai-explain', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                typing.style.display = "none";
+                responseArea.style.display = "block";
+                sendBtn.disabled = false;
+
+                if (data.reply) {
+                    // Typewriter effect
+                    responseText.innerText = "";
+                    let i = 0;
+                    const speed = 15; // Speed in ms
+
+                    function typeWriter() {
+                        if (i < data.reply.length) {
+                            responseText.innerHTML += data.reply.charAt(i);
+                            i++;
+                            setTimeout(typeWriter, speed);
+                        }
+                    }
+                    typeWriter();
+                } else {
+                    responseText.innerText = "I'm sorry, I couldn't generate a response at the moment.";
+                }
+
+            } catch (error) {
+                console.error("Backend Error:", error);
+                typing.style.display = "none";
+                responseArea.style.display = "block";
+                sendBtn.disabled = false;
+                responseText.innerHTML = `<span style="color: #ef4444;">Connection Error: Ensure the Python backend is running on port 5000.</span>`;
+            }
+        }
+
+        // Allow submitting with Enter key (Shift+Enter for newline)
+        document.getElementById("aiPrompt").addEventListener("keydown", function (e) {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                askAI();
+            }
+        });
+    </script>
+</body>
+
+</html>

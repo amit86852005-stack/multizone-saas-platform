@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Women Zone | MultiZone Empowerment</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <script>
+        if (!localStorage.getItem("isLoggedIn")) {
+            window.location.href = "../../auth/login.html";
+        }
+    </script>
+
+    <nav class="scrolled">
+        <a href="../../index.html" class="logo">MultiZone Women</a>
+        <div class="nav-links">
+            <a href="../../dashboard/dashboard.html">Dashboard</a>
+            <a href="women-home.html">Hub Home</a>
+        </div>
+    </nav>
+
+    <header class="dashboard-container" style="text-align: center;">
+        <i class="fas fa-venus animate-fade-in"
+            style="font-size: 4rem; margin-bottom: 2rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;"></i>
+        <h1 class="animate-fade-in"
+            style="font-size: 3.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+            Women module — safety, health, and career tools</h1>
+        <p class="animate-fade-in" style="font-size: 1.2rem; color: var(--text-muted);">Provide safety and health utilities, and professional resources. Tools: SOS, helplines, health tracking, and career listings.</p>
+    </header>
+
+    <section class="card-grid" style="padding: 0 10% 5rem;">
+        <div class="dash-card glass reveal" onclick="location.href='women-safety.html'">
+            <i class="fas fa-shield-alt" style="color: #ef4444"></i>
+            <h3>Safety Tools</h3>
+            <p>One-tap SOS and location sharing.</p>
+        </div>
+
+        <div class="dash-card glass reveal" onclick="location.href='women-health.html'">
+            <i class="fas fa-notes-medical" style="color: var(--secondary)"></i>
+            <h3>Health Tracker</h3>
+            <p>Cycle and wellness monitoring.</p>
+        </div>
+
+        <div class="dash-card glass reveal" onclick="location.href='women-career.html'">
+            <i class="fas fa-briefcase" style="color: var(--primary-light)"></i>
+            <h3>Career Path</h3>
+            <p>Mentorship and job opportunities.</p>
+        </div>
+
+        <div class="dash-card glass reveal" onclick="location.href='women-ai.html'">
+            <i class="fas fa-magic" style="color: var(--accent)"></i>
+            <h3>Assistant</h3>
+            <p>Task and guidance tools for common workflows.</p>
+        </div>
+    </section>
+
+    <section id="resourceSection"
+        style="padding: 0 10% 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div class="glass reveal" style="padding: 2.5rem;">
+            <h3 style="margin-bottom: 2rem;"><i class="fas fa-landmark"
+                    style="color:var(--primary-light); margin-right: 0.5rem;"></i> Government Schemes</h3>
+            <div id="schemesDisplay" style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- Schemes injected here -->
+                <p style="color:var(--text-muted)">Loading active schemes...</p>
+            </div>
+        </div>
+
+        <div class="glass reveal" style="padding: 2.5rem;">
+            <h3 style="margin-bottom: 2rem;"><i class="fas fa-phone-alt"
+                    style="color:var(--accent); margin-right: 0.5rem;"></i> Emergency Helplines</h3>
+            <div id="helplinesDisplay" style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- Helplines injected here -->
+                <p style="color:var(--text-muted)">Loading helplines...</p>
+            </div>
+        </div>
+    </section>
+
+        <div class="glass" style="margin: 0 10% 5rem; padding: 3rem; text-align: center;">
+        <h3>Safety & Community</h3>
+        <p style="color: var(--text-muted); margin: 1rem 0;">Access safety tools and community resources in a secure environment.</p>
+        <a href="women-safety.html" class="btn btn-primary" role="button" style="display:inline-block;">Open Module</a>
+    </div>
+
+    <script type="module">
+        import { getWomenSchemes, getHelplines } from "../../assets/js/db.js";
+
+        async function loadResources() {
+            const schemeDiv = document.getElementById('schemesDisplay');
+            const helpDiv = document.getElementById('helplinesDisplay');
+
+            try {
+                const schemes = await getWomenSchemes();
+                const helplines = await getHelplines();
+
+                schemeDiv.innerHTML = schemes.length ? '' : '<p>No active schemes found.</p>';
+                schemes.forEach(s => {
+                    const card = document.createElement('div');
+                    card.style.cssText = "padding:1rem; border-bottom:1px solid var(--glass-border)";
+                    card.innerHTML = `
+                        <h4 style="color:var(--primary-light)">${s.name}</h4>
+                        <p style="font-size:0.9rem; color:var(--text-muted); margin:0.5rem 0">${s.desc}</p>
+                        ${s.link ? `<a href="${s.link}" target="_blank" style="color:var(--accent); font-size:0.8rem; text-decoration:none">Apply Now <i class="fas fa-external-link-alt" style="font-size:0.7rem"></i></a>` : ''}
+                    `;
+                    schemeDiv.appendChild(card);
+                });
+
+                helpDiv.innerHTML = helplines.length ? '' : '<p>No helplines found.</p>';
+                helplines.forEach(h => {
+                    const card = document.createElement('div');
+                    card.style.cssText = "padding:1.2rem; background:rgba(255,255,255,0.03); border-radius:12px; display:flex; justify-content:space-between; align-items:center";
+                    card.innerHTML = `
+                        <div>
+                            <span style="font-size:0.75rem; text-transform:uppercase; color:var(--accent)">${h.category}</span>
+                            <h4 style="margin:0.25rem 0">${h.name}</h4>
+                        </div>
+                        <a href="tel:${h.number}" class="btn btn-primary" style="padding:0.5rem 1rem; border-radius:30px">
+                            <i class="fas fa-phone"></i> ${h.number}
+                        </a>
+                    `;
+                    helpDiv.appendChild(card);
+                });
+
+            } catch (e) {
+                console.error(e);
+                schemeDiv.innerHTML = "<p>Error loading resources.</p>";
+                helpDiv.innerHTML = "<p>Error loading resources.</p>";
+            }
+        }
+
+        loadResources();
+    </script>
+    <script src="../../assets/js/main.js"></script>
+</body>
+
+</html>

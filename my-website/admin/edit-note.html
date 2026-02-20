@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Notes | Admin Panel</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <script>
+        if (!localStorage.getItem("isAdmin")) {
+            window.location.href = "admin-login.html";
+        }
+    </script>
+
+    <nav class="scrolled">
+        <a href="../index.html" class="logo">MultiZone Admin</a>
+        <div class="nav-links">
+            <a href="admin-dashboard.html">Dashboard</a>
+            <a href="add-notes.html">Back to Library</a>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <div class="glass" style="padding: 3rem; max-width: 800px; margin: 0 auto;">
+            <h2 style="margin-bottom: 2rem;">Update Study Material</h2>
+            <form id="editNoteForm">
+                <input type="hidden" id="noteId">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Target Class</label>
+                        <select id="nClass" required>
+                            <option value="9">Class 9</option>
+                            <option value="10">Class 10</option>
+                            <option value="11">Class 11</option>
+                            <option value="12">Class 12</option>
+                            <option value="BTech">B.Tech</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="text" id="nSubject" placeholder="e.g. Mathematics" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Chapter Name</label>
+                        <input type="text" id="nChapter" placeholder="e.g. Calculus Basics" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Content (Full Text)</label>
+                    <textarea id="nContent" rows="12" placeholder="Note content..." required></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Update Notes</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteCurrentNote()">Delete Material</button>
+                    <button type="button" class="btn btn-glass" onclick="location.href='add-notes.html'">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getNotes, deleteItem, addNote } from '../assets/js/db.js';
+        import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkuYIwCIyIaV96-XzWli6js6ef3VO04R0",
+            authDomain: "multizone-893ed.firebaseapp.com",
+            projectId: "multizone-893ed",
+            storageBucket: "multizone-893ed.firebasestorage.app",
+            messagingSenderId: "919907268865",
+            appId: "1:919907268865:web:6f620b330d43afa8134300"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadNoteData() {
+            const noteId = localStorage.getItem("editNoteId");
+            if (!noteId) {
+                alert("No note selected for editing!");
+                window.location.href = "add-notes.html";
+                return;
+            }
+
+            const allNotes = await getNotes();
+            const note = allNotes.find(n => n.id === noteId);
+
+            if (note) {
+                document.getElementById("noteId").value = note.id;
+                document.getElementById("nClass").value = note.class;
+                document.getElementById("nSubject").value = note.subject;
+                document.getElementById("nChapter").value = note.chapter;
+                document.getElementById("nContent").value = note.content;
+            } else {
+                alert("Note not found in database.");
+                window.location.href = "add-notes.html";
+            }
+        }
+
+        document.getElementById("editNoteForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const id = document.getElementById("noteId").value;
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerText = "Applying changes...";
+
+            const updatedData = {
+                class: document.getElementById("nClass").value,
+                subject: document.getElementById("nSubject").value,
+                chapter: document.getElementById("nChapter").value,
+                content: document.getElementById("nContent").value,
+                updatedAt: new Date().toISOString()
+            };
+
+            try {
+                const docRef = doc(db, "notes", id);
+                await updateDoc(docRef, updatedData);
+                alert("Notes updated successfully!");
+                window.location.href = "add-notes.html";
+            } catch (err) {
+                alert("Error updating: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Update Notes";
+            }
+        });
+
+        window.deleteCurrentNote = async () => {
+            const id = document.getElementById("noteId").value;
+            if (confirm("Permanently delete these notes? This action cannot be undone.")) {
+                await deleteItem("notes", id);
+                window.location.href = "add-notes.html";
+            }
+        }
+
+        loadNoteData();
+    </script>
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

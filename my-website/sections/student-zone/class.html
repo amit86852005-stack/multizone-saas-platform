@@ -1,0 +1,92 @@
+<script>
+    if (!localStorage.getItem("isLoggedIn")) {
+        window.location.href = "../../auth/login.html";
+    }
+</script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Class | Student Zone</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+
+    <style>
+        .class-container {
+            padding: 6rem 10%;
+            text-align: center;
+        }
+
+        .class-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .class-card {
+            padding: 2.5rem;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+
+        .class-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="../../index.html" class="logo">MultiZone</a>
+        <div class="nav-links">
+            <a href="../../dashboard/dashboard.html">Dashboard</a>
+            <a href="student-home.html">Student Zone</a>
+        </div>
+    </nav>
+
+    <div class="class-container">
+        <h2>Select Your Class</h2>
+        <p>Choose your academic level</p>
+
+        <div class="class-grid">
+
+            <div class="class-card glass" onclick="selectClass('9')">
+                <h3>Class 9</h3>
+            </div>
+
+            <div class="class-card glass" onclick="selectClass('10')">
+                <h3>Class 10</h3>
+            </div>
+
+            <div class="class-card glass" onclick="selectClass('11')">
+                <h3>Class 11</h3>
+            </div>
+
+            <div class="class-card glass" onclick="selectClass('12')">
+                <h3>Class 12</h3>
+            </div>
+
+            <div class="class-card glass" onclick="selectClass('btech')">
+                <h3>BTech</h3>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function selectClass(cls) {
+            localStorage.setItem("selectedClass", cls);
+            window.location.href = "subject.html";
+        }
+    </script>
+
+    <script src="../../assets/js/main.js"></script>
+</body>
+
+</html>

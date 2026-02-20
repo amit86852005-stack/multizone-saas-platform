@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Dashboard | MultiZone</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-item {
+            padding: 1.5rem;
+            text-align: left;
+        }
+
+        .stat-item h4 {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item .val {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        if (!localStorage.getItem("isLoggedIn")) {
+            window.location.href = "../auth/login.html";
+        }
+    </script>
+
+    <nav class="scrolled">
+        <a href="../index.html" class="logo">MultiZone</a>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <button class="btn btn-glass" onclick="logout()">Sign Out</button>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <header style="margin-bottom: 4rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                    <h1 id="welcomeText" style="font-size: 3rem;">Welcome Back 👋</h1>
+                    <p id="premiumStatus" style="color: var(--text-muted); margin-top: 0.5rem;"></p>
+                </div>
+                <div class="glass" style="padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                    <div
+                        style="width: 45px; height: 45px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <div id="userName" style="font-weight: 600;">Guest</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Active Profile</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="stats-bar">
+            <div class="stat-item glass">
+                <h4>Safety Alerts</h4>
+                <div class="val">0 Active</div>
+            </div>
+            <div class="stat-item glass">
+                <h4>Study Hours</h4>
+                <div class="val">12.5 hrs</div>
+            </div>
+            <div class="stat-item glass">
+                <h4>Saved Hospitals</h4>
+                <div class="val">3 Locations</div>
+            </div>
+            <div class="stat-item glass">
+                <h4>Career Matches</h4>
+                <div class="val">8 New</div>
+            </div>
+        </section>
+
+        <h3 style="margin-bottom: 2rem;">Explore Your Ecosystem</h3>
+        <section class="card-grid" style="margin-top: 0;">
+            <div class="dash-card glass reveal" onclick="location.href='../sections/student-zone/student-home.html'">
+                <i class="fas fa-user-graduate"></i>
+                <h3>Student Zone</h3>
+                <p>Curated learning materials & AI tools.</p>
+            </div>
+
+            <div class="dash-card glass reveal" onclick="location.href='../sections/hospital-zone/hospital-home.html'">
+                <i class="fas fa-heartbeat"></i>
+                <h3>Health Network</h3>
+                <p>Specialist search & wellness trackers.</p>
+            </div>
+
+            <div class="dash-card glass reveal" onclick="location.href='../sections/career-zone/career-home.html'">
+                <i class="fas fa-rocket"></i>
+                <h3>Career Launchpad</h3>
+                <p>Jobs, skill prep, and growth tools.</p>
+            </div>
+
+            <div class="dash-card glass reveal" onclick="location.href='../sections/women-zone/women-home.html'">
+                <i class="fas fa-female"></i>
+                <h3>Empower Zone</h3>
+                <p>Safety, community, and health tracking.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const userData = localStorage.getItem("user");
+        const welcomeText = document.getElementById("welcomeText");
+        const userNameDisp = document.getElementById("userName");
+        const premiumStatus = document.getElementById("premiumStatus");
+
+        if (userData) {
+            const user = JSON.parse(userData);
+
+            // Safety check: ensure onboarding is complete
+            if (!user.city || !user.type) {
+                window.location.href = "../auth/onboarding.html";
+            }
+
+            welcomeText.innerText = `Welcome, ${user.name || 'Member'} 👋`;
+            userNameDisp.innerText = user.name || 'Guest User';
+        }
+
+        if (localStorage.getItem("isPremium") === "true") {
+            premiumStatus.innerHTML = "<i class='fas fa-crown' style='color:#fbbf24'></i> Premium Elite Member";
+        } else {
+            premiumStatus.innerHTML = `Standard Plan • <a href="../payments/upgrade.html" style="color:var(--primary-light); text-decoration:none;">Upgrade to Pro <i class='fas fa-arrow-right' style='font-size:0.7rem'></i></a>`;
+        }
+
+        function logout() {
+            localStorage.removeItem("isLoggedIn");
+            window.location.href = "../auth/login.html";
+        }
+    </script>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

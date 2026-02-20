@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Hospitals | MultiZone Health</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="scrolled">
+        <a href="../../index.html" class="logo">MultiZone Health</a>
+        <div class="nav-links">
+            <a href="disease.html">Back to Specialties</a>
+            <a href="../../dashboard/dashboard.html">Dashboard</a>
+        </div>
+    </nav>
+
+    <header class="dashboard-container" style="text-align: center;">
+        <h2 id="listTitle">Hospitals for You</h2>
+        <p>Top-rated facilities matching your criteria.</p>
+    </header>
+
+    <div class="card-grid" style="padding: 0 10% 5rem;" id="hospitalGrid">
+        <p>Searching our database...</p>
+    </div>
+
+    <script type="module">
+        import { getHospitals } from '../../assets/js/db.js';
+
+        async function loadHospitals() {
+            const city = localStorage.getItem("selectedCity");
+            const disease = localStorage.getItem("selectedDisease");
+            const grid = document.getElementById("hospitalGrid");
+
+            document.getElementById("listTitle").innerText = `${disease} Experts in ${city}`;
+
+            try {
+                const hospitals = await getHospitals();
+                const filtered = hospitals.filter(h => h.city === city && h.disease === disease);
+
+                if (filtered.length === 0) {
+                    grid.innerHTML = `
+                        <div class="glass" style="grid-column: 1/-1; padding: 3rem; text-align: center;">
+                            <i class="fas fa-search-location" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                            <p>We couldn't find any ${disease} hospitals in ${city} right now.</p>
+                            <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="history.back()">Try Another Search</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = "";
+                filtered.forEach(h => {
+                    const card = document.createElement("div");
+                    card.className = "dash-card glass animate-fade-in";
+                    card.style.textAlign = "left";
+                    card.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <h3 style="color: var(--primary-light)">${h.name}</h3>
+                            <span class="glass" style="padding: 4px 10px; font-size: 0.8rem; border: 1px solid #fbbf24; color: #fbbf24;">
+                                ★ ${h.rating}
+                            </span>
+                        </div>
+                        <p style="font-size: 0.9rem; margin: 1rem 0; color: var(--text-muted);">
+                            <i class="fas fa-map-marker-alt"></i> ${h.address || 'Address not specified'}
+                        </p>
+                        <button class="btn btn-glass" style="width: 100%; margin-top: 1rem;" onclick="bookConsultation('${h.id}')">
+                            View Details / Book
+                        </button>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (err) {
+                grid.innerHTML = "<p>Error connecting to Database.</p>";
+            }
+        }
+
+        window.bookConsultation = (id) => {
+            localStorage.setItem("selectedHospitalId", id);
+            window.location.href = "hospital-detail.html";
+        };
+
+        loadHospitals();
+    </script>
+
+    <script src="../../assets/js/main.js"></script>
+</body>
+
+</html>

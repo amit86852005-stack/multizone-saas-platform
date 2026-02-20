@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Details | MultiZone Health</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .detail-container {
+            max-width: 1000px;
+            margin: 100px auto 50px;
+            padding: 0 1.5rem;
+        }
+
+        .detail-hero {
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .booking-card {
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .info-item {
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="scrolled">
+        <a href="../../index.html" class="logo">MultiZone Health</a>
+        <div class="nav-links">
+            <a href="hospital-list.html">Back to List</a>
+            <a href="../../dashboard/dashboard.html">Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="detail-container" id="detailRoot">
+        <div class="glass" style="padding: 4rem; text-align: center;">
+            <p>Loading hospital profiles...</p>
+        </div>
+    </main>
+
+    <script type="module">
+        import { getHospitals } from '../../assets/js/db.js';
+
+        async function loadDetails() {
+            const hId = localStorage.getItem("selectedHospitalId");
+            const root = document.getElementById("detailRoot");
+
+            try {
+                const hospitals = await getHospitals();
+                const h = hospitals.find(h => h.id === hId);
+
+                if (!h) {
+                    root.innerHTML = "<h2>Hospital profile not found.</h2>";
+                    return;
+                }
+
+                root.innerHTML = `
+                    <div class="detail-hero glass animate-fade-in">
+                        <div>
+                            <h1 style="font-size: 3rem; margin-bottom: 0.5rem;">${h.name}</h1>
+                            <p style="font-size: 1.2rem; color: var(--text-muted);"><i class="fas fa-map-marker-alt"></i> ${h.city} | ${h.disease} Specialist</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="color: #fbbf24; font-size: 1.5rem; font-weight: 700;">★ ${h.rating}</div>
+                            <div style="font-size: 0.9rem; color: var(--text-muted);">Verified Facility</div>
+                        </div>
+                    </div>
+
+                    <div class="info-grid">
+                        <div class="info-item reveal">
+                            <i class="fas fa-clock" style="font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem;"></i>
+                            <h4>Open 24/7</h4>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">Emergency Ready</p>
+                        </div>
+                        <div class="info-item reveal">
+                            <i class="fas fa-user-md" style="font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem;"></i>
+                            <h4>Top Doctors</h4>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">Certified Experts</p>
+                        </div>
+                        <div class="info-item reveal">
+                            <i class="fas fa-flask" style="font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem;"></i>
+                            <h4>Lab Tests</h4>
+                            <p style="font-size: 0.8rem; color: var(--text-muted);">NABL Accredited</p>
+                        </div>
+                    </div>
+
+                    <div class="booking-card glass animate-fade-in">
+                        <h3 style="margin-bottom: 1.5rem;">Instant Consultation / Appointment</h3>
+                        <p style="margin-bottom: 2rem; color: var(--text-muted);">Schedule a visit at <b>${h.name}</b>. Select your preferred slot below.</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div class="form-group">
+                                <label>Patient Name</label>
+                                <input type="text" placeholder="Full Name">
+                            </div>
+                            <div class="form-group">
+                                <label>Preferred Date</label>
+                                <input type="date">
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" style="width: 100%; padding: 1.2rem;" onclick="confirmBooking()">Request Appointment</button>
+                    </div>
+
+                    <div class="glass" style="padding: 2.5rem; margin-top: 2rem;">
+                        <h4 style="margin-bottom: 1rem;">Address & Directions</h4>
+                        <p style="color: var(--text-muted); line-height: 1.6;">
+                            ${h.address || 'Proprietary address details are available upon booking confirmation.'}
+                        </p>
+                    </div>
+                `;
+            } catch (err) {
+                root.innerHTML = "<h2>Error loading details.</h2>";
+            }
+        }
+
+        window.confirmBooking = () => {
+            alert("Booking request sent! The hospital will contact you shortly to confirm your slot. 🏥");
+        };
+
+        loadDetails();
+    </script>
+
+    <script src="../../assets/js/main.js"></script>
+</body>
+
+</html>

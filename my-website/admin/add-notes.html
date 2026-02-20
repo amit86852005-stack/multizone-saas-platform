@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Notes | Admin Panel</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+  <script>
+    if (!localStorage.getItem("isAdmin")) {
+      window.location.href = "admin-login.html";
+    }
+  </script>
+
+  <nav class="scrolled">
+    <a href="../index.html" class="logo">MultiZone Admin</a>
+    <div class="nav-links">
+      <a href="admin-dashboard.html">Dashboard</a>
+      <a href="add-notes.html">Notes</a>
+      <a href="add-hospitals.html">Hospitals</a>
+      <button class="btn btn-glass" onclick="logoutAdmin()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="admin-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+      <h2>Student Notes Management</h2>
+      <button class="btn btn-primary" onclick="toggleForm()">+ Add New Note</button>
+    </div>
+
+    <!-- Add Notes Form -->
+    <div id="addForm" class="glass" style="display: none; padding: 2rem; margin-bottom: 2rem;">
+      <h3 style="margin-bottom: 1.5rem;">Create Study Material</h3>
+      <form id="noteForm">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label>Target Class</label>
+            <select id="nClass" required>
+              <option value="9">Class 9</option>
+              <option value="10">Class 10</option>
+              <option value="11">Class 11</option>
+              <option value="12">Class 12</option>
+              <option value="BTech">B.Tech</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Subject</label>
+            <input type="text" id="nSubject" placeholder="e.g. Mathematics" required>
+          </div>
+          <div class="form-group">
+            <label>Chapter Name</label>
+            <input type="text" id="nChapter" placeholder="e.g. Calculus Basics" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Content (Markdown or Plain Text)</label>
+          <textarea id="nContent" rows="10" placeholder="Type or paste the chapter notes here..." required></textarea>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <button type="submit" class="btn btn-primary">Publish Notes</button>
+          <button type="button" class="btn btn-glass" onclick="toggleForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Notes List -->
+    <div id="notesList" class="card-grid" style="margin-top: 0;">
+      <p>Loading educational materials...</p>
+    </div>
+  </div>
+
+  <!-- Firebase / DB Logic -->
+  <script type="module">
+    import { addNote, getNotes, deleteItem } from '../assets/js/db.js';
+
+    // Load Notes
+    async function loadNotes() {
+      const list = document.getElementById("notesList");
+      const notes = await getNotes();
+
+      if (notes.length === 0) {
+        list.innerHTML = "<div class='glass' style='padding: 2rem; grid-column: 1/-1; text-align: center;'><p>No notes found in the library.</p></div>";
+        return;
+      }
+
+      list.innerHTML = "";
+      notes.forEach(n => {
+        const card = document.createElement("div");
+        card.className = "glass note-card animate-fade-in";
+        card.style.position = "relative";
+        card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <span style="background: var(--primary); font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; text-transform: uppercase;">Class ${n.class}</span>
+                            <h3 style="margin-top: 0.5rem;">${n.subject}: ${n.chapter}</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">
+                                ${n.content.substring(0, 100)}${n.content.length > 100 ? '...' : ''}
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-glass" style="padding: 0.5rem; font-size: 0.8rem;" onclick="editN('${n.id}')">
+                                <i class="fas fa-edit" style="color: var(--primary-light)"></i>
+                            </button>
+                            <button class="btn btn-glass" style="padding: 0.5rem; font-size: 0.8rem;" onclick="deleteN('${n.id}')">
+                                <i class="fas fa-trash" style="color: #ef4444"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+        list.appendChild(card);
+      });
+    }
+
+    // Edit Exposure
+    window.editN = (id) => {
+      localStorage.setItem("editNoteId", id);
+      window.location.href = "edit-note.html";
+    };
+
+    // Add Note
+    document.getElementById("noteForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.innerText = "Publishing...";
+
+      const note = {
+        class: document.getElementById("nClass").value,
+        subject: document.getElementById("nSubject").value,
+        chapter: document.getElementById("nChapter").value,
+        content: document.getElementById("nContent").value,
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        await addNote(note);
+        e.target.reset();
+        toggleForm();
+        loadNotes();
+      } catch (err) {
+        alert("Error saving: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Publish Notes";
+      }
+    });
+
+    // Delete
+    window.deleteN = async (id) => {
+      if (confirm("Permanently delete these notes?")) {
+        await deleteItem("notes", id);
+        loadNotes();
+      }
+    };
+
+    window.toggleForm = () => {
+      const form = document.getElementById("addForm");
+      form.style.display = form.style.display === "none" ? "block" : "none";
+    };
+
+    window.logoutAdmin = () => {
+      localStorage.removeItem("isAdmin");
+      window.location.href = "admin-login.html";
+    };
+
+    // Initial Load
+    loadNotes();
+  </script>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

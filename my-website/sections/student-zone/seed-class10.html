@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seed Class 10 Data</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+
+<body
+    style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; text-align: center;">
+
+    <div class="glass" style="padding: 3rem; max-width: 600px;">
+        <h1 style="color: var(--primary);">Class 10 Content Seeder</h1>
+        <p style="margin: 1rem 0; color: var(--text-muted);">
+            Click the button below to populate the database with Subjects (Maths, Science, SST, English)
+            and important Question & Answers for Class 10.
+        </p>
+
+        <div id="status" style="margin-bottom: 1.5rem; font-weight: bold;"></div>
+
+        <button id="seedBtn" class="btn btn-primary" onclick="seedData()">
+            populate Class 10 Data
+        </button>
+
+        <br><br>
+        <a href="student-home.html" style="color: var(--text);">Back to Student Zone</a>
+    </div>
+
+    <script type="module">
+        import { addNote } from '../../assets/js/db.js';
+
+        const class10Data = [
+            // MATHEMATICS
+            {
+                class: "10",
+                subject: "Mathematics",
+                chapter: "Real Numbers (Important Q&A)",
+                content: `### Important Questions: Real Numbers
+
+**Q1: Prove that √2 is irrational.**
+*Answer:* 
+Let us assume, to the contrary, that √2 is rational.
+So, we can find integers r and s (≠ 0) such that √2 = r/s.
+Suppose r and s have a common factor other than 1. Then, we divide by the common factor to get √2 = a/b, where a and b are coprime.
+So, b√2 = a.
+Squaring on both sides and rearranging, we get 2b² = a².
+Therefore, 2 divides a². Now, by Theorem 1.3, it follows that 2 divides a.
+So, we can write a = 2c for some integer c.
+Substituting for a, we get 2b² = 4c², that is, b² = 2c².
+This means that 2 divides b², and so 2 divides b.
+Therefore, a and b have at least 2 as a common factor.
+But this contradicts the fact that a and b have no common factors other than 1.
+This contradiction has arisen because of our incorrect assumption that √2 is rational.
+So, we conclude that √2 is irrational.
+
+**Q2: Find the LCM and HCF of 6 and 20 by the prime factorisation method.**
+*Answer:*
+6 = 2 × 3
+20 = 2 × 2 × 5 = 2² × 5
+HCF(6, 20) = 2 (Product of the smallest power of each common prime factor)
+LCM(6, 20) = 2² × 3 × 5 = 60 (Product of the greatest power of each prime factor)`
+            },
+            {
+                class: "10",
+                subject: "Mathematics",
+                chapter: "Polynomials (Exam Notes)",
+                content: `### Key Concepts: Polynomials
+
+**1. Geometrical Meaning of the Zeroes of a Polynomial**
+For a quadratic polynomial ax² + bx + c, the graph is a parabola opening upwards if a > 0 and downwards if a < 0.
+The points where the graph cuts the x-axis are the zeroes of the polynomial.
+
+**2. Relationship between Zeroes and Coefficients**
+If α and β are the zeroes of the quadratic polynomial p(x) = ax² + bx + c, then:
+*   Sum of zeroes (α + β) = -b/a = -(Coefficient of x) / (Coefficient of x²)
+*   Product of zeroes (αβ) = c/a = (Constant term) / (Coefficient of x²)
+
+**Q: Find the zeroes of the quadratic polynomial x² + 7x + 10.**
+*Answer:*
+x² + 7x + 10 = x² + 5x + 2x + 10
+= x(x + 5) + 2(x + 5)
+= (x + 2)(x + 5)
+So, the value of x² + 7x + 10 is zero when x + 2 = 0 or x + 5 = 0, i.e., when x = -2 or x = -5.
+Therefore, the zeroes of x² + 7x + 10 are -2 and -5.`
+            },
+
+            // SCIENCE
+            {
+                class: "10",
+                subject: "Science",
+                chapter: "Chemical Reactions (Equations)",
+                content: `### Balanced Chemical Equations
+
+**Q1: Why should a magnesium ribbon be cleaned before burning in air?**
+*Answer:* Magnesium gets covered with a layer of magnesium oxide on its surface which hinders burning. It is cleaned to remove this layer.
+
+**Q2: Balance the following chemical equations:**
+1.  Hydrogen + Chlorine → Hydrogen chloride
+    *   H₂ + Cl₂ → 2HCl
+2.  Barium chloride + Aluminium sulphate → Barium sulphate + Aluminium chloride
+    *   3BaCl₂ + Al₂(SO₄)₃ → 3BaSO₄ + 2AlCl₃
+3.  Sodium + Water → Sodium hydroxide + Hydrogen
+    *   2Na + 2H₂O → 2NaOH + H₂
+
+**Types of Chemical Reactions:**
+1.  **Combination Reaction:** Calcium oxide reacts vigorously with water to produce slaked lime.
+    CaO(s) + H₂O(l) → Ca(OH)₂(aq) + Heat
+2.  **Decomposition Reaction:** Ferrous sulphate crystals lose water when heated and the colour of the crystals changes.
+    2FeSO₄(s) → Fe₂O₃(s) + SO₂(g) + SO₃(g)`
+            },
+            {
+                class: "10",
+                subject: "Science",
+                chapter: "Life Processes (Biology Notes)",
+                content: `### Life Processes: Nutrition
+
+**Autotrophic Nutrition:**
+Carbon and energy requirements of the autotrophic organism are fulfilled by photosynthesis.
+It is the process by which autotrophs take in substances from the outside and convert them into stored forms of energy.
+Equation: 6CO₂ + 12H₂O → C₆H₁₂O₆ + 6O₂ + 6H₂O (in the presence of sunlight and chlorophyll).
+
+**Heterotrophic Nutrition:**
+Complex substances have to be broken down into simpler ones before they can be used for the upkeep and growth of the body.
+examples: Fungi (bread moulds, yeast), Animals.
+
+**Human Digestive System:**
+1.  **Mouth:** Intake of whole food, chewing/grinding. Salivary amylase breaks down starch.
+2.  **Stomach:** Gastric glands release HCl, pepsin (protein digesting enzyme) and mucus.
+3.  **Small Intestine:** Site of complete digestion of carbohydrates, proteins and fats. Receives bile from liver & pancreatic juice.
+4.  **Large Intestine:** Absorb water from unabsorbed food.`
+            },
+
+            // SOCIAL SCIENCE
+            {
+                class: "10",
+                subject: "Social Science",
+                chapter: "The Rise of Nationalism in Europe",
+                content: `### Important Dates & Events
+
+*   **1789:** The French Revolution occurred.
+*   **1804:** Napoleonic Code was introduced.
+*   **1815:** Process of Vienna Convention & Defeat of Napoleon.
+*   **1848:** Revolutions in Europe; artisans, industrial workers and peasants revolted against economic hardships; middle classes demanded constitutions and representative governments.
+*   **1859-1870:** Unification of Italy.
+*   **1866-1871:** Unification of Germany.
+
+**Q: What steps did the French revolutionaries take to create a sense of collective identity among the French people?**
+*Answer:*
+1.  The ideas of **la patrie** (the fatherland) and **le citoyen** (the citizen) emphasised the notion of a united community enjoying equal rights under a constitution.
+2.  A new French flag, the tricolour, was chosen to replace the former royal standard.
+3.  The Estates General was elected by the body of active citizens and renamed the National Assembly.
+4.  New hymns were composed, oaths taken and martyrs commemorated, all in the name of the nation.
+5.  A centralised administrative system was put in place and it formulated uniform laws for all citizens within its territory.`
+            },
+
+            // ENGLISH
+            {
+                class: "10",
+                subject: "English",
+                chapter: "A Letter to God (Summary)",
+                content: `### Summary: A Letter to God (G.L. Fuentes)
+
+The story depicts the infinite faith of a man named Lencho in God. Lencho was a dedicated farmer. He was expecting a decent shower to nourish his field of corn. It did happen, but it soon turned into a hailstorm which destroyed his entire crop field. Note: The damage posed a threat to his family’s survival as their entire year's labor was ruined.
+
+Although disheartened, Lencho had robust belief in God. He decided to write a letter to God explaining his situation and asking for 100 pesos to sow his fields again and survive until the next crop.
+
+He went to town to post the letter. The postmaster saw the letter addressed to ‘God’ and was amused. However, he was also impressed by the man's faith. He decided to help Lencho to keep his faith alive. He asked his employees and friends to contribute. He managed to collect **70 pesos**.
+
+He put the money in an envelope and signed it 'God'. When Lencho received the letter, he was not surprised to see the money but became angry when he counted it. He found only 70 pesos. He believed God could not make a mistake.
+
+He wrote another letter to God, asking for the remaining 30 pesos but warned Him not to send it through the mail because **"the post office employees are a bunch of crooks"**.
+
+**Irony:** The people who helped him (post office employees) were suspected by him as thieves.`
+            }
+        ];
+
+        window.seedData = async function () {
+            const btn = document.getElementById("seedBtn");
+            const status = document.getElementById("status");
+            btn.disabled = true;
+            btn.innerText = "Adding data...";
+            status.style.color = "var(--primary-light)";
+            status.innerText = "Started adding notes...";
+
+            try {
+                let count = 0;
+                for (const note of class10Data) {
+                    note.createdAt = new Date().toISOString();
+                    await addNote(note);
+                    count++;
+                }
+
+                status.style.color = "#10b981";
+                status.innerText = `Success! Added ${count} notes for Class 10.`;
+                btn.innerText = "Done";
+                alert(`Successfully added ${count} notes for Class 10! You will now be redirected.`);
+
+                // Redirect after 2 seconds
+                setTimeout(() => {
+                    localStorage.setItem("selectedClass", "10"); // Force select class 10 so redirection makes sense
+                    window.location.href = "subject.html";
+                }, 1000);
+
+            } catch (err) {
+                console.error(err);
+                status.style.color = "#ef4444";
+                status.innerText = "Error adding data: " + err.message;
+                btn.disabled = false;
+                btn.innerText = "Try Again";
+                alert("Error: " + err.message);
+            }
+        };
+    </script>
+</body>
+
+</html>

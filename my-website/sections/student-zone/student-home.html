@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Zone | MultiZone Learning</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <script>
+        if (!localStorage.getItem("isLoggedIn")) {
+            window.location.href = "../../auth/login.html";
+        }
+    </script>
+
+    <nav class="scrolled">
+        <a href="../../index.html" class="logo">MultiZone Student</a>
+        <div class="nav-links">
+            <a href="../../dashboard/dashboard.html">Dashboard</a>
+            <a href="student-home.html">Learning Home</a>
+            <a href="ai-explainer.html">AI Explainer</a>
+        </div>
+    </nav>
+
+    <header class="dashboard-container" style="text-align: center;">
+        <h1 class="animate-fade-in" style="font-size: 3.5rem; margin-bottom: 1rem;">Education module — course and study management</h1>
+        <p class="animate-fade-in" style="font-size: 1.2rem; color: var(--text-muted);">Manage course tracks, access structured notes, and monitor study progress. Tools: notes, timers, subject trackers, and a topic explainer.</p>
+    </header>
+
+    <section class="card-grid" style="padding: 0 10% 5rem;">
+        <div class="dash-card glass reveal" onclick="selectTrack('9')">
+            <i class="fas fa-book-open"></i>
+            <h3>Class 9</h3>
+            <p>Foundational notes for core subjects.</p>
+        </div>
+
+        <div class="dash-card glass reveal" onclick="selectTrack('10')">
+            <i class="fas fa-microscope"></i>
+            <h3>Class 10</h3>
+            <p>Board examination specialized materials.</p>
+        </div>
+
+        <div class="dash-card glass reveal" onclick="selectTrack('11')">
+            <i class="fas fa-atom"></i>
+            <h3>Class 11</h3>
+            <p>Advanced concepts for higher secondary.</p>
+        </div>
+
+        <div class="dash-card glass reveal" onclick="selectTrack('12')">
+            <i class="fas fa-dna"></i>
+            <h3>Class 12</h3>
+            <p>Comprehensive board & entrance prep.</p>
+        </div>
+
+        <div class="dash-card glass reveal" onclick="selectTrack('BTech')"
+            style="background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.06), rgba(var(--primary-light-rgb), 0.06));">
+            <i class="fas fa-laptop-code"></i>
+            <h3>B.Tech / Engineering</h3>
+            <p>DSA, OS, DBMS and Software Engineering.</p>
+        </div>
+
+        <div class="dash-card glass reveal" onclick="window.location.href='ai-explainer.html'"
+            style="border: 1px solid var(--secondary);">
+            <i class="fas fa-robot" style="color: var(--secondary)"></i>
+            <h3>Topic Explainer</h3>
+            <p>Tool for concise topic explanations and clarifications.</p>
+        </div>
+    </section>
+
+    <script>
+        function selectTrack(track) {
+            localStorage.setItem("selectedClass", track);
+            window.location.href = "subject.html";
+        }
+    </script>
+
+    <script src="../../assets/js/main.js"></script>
+</body>
+
+</html>

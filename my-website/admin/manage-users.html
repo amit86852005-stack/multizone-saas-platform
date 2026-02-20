@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management | Admin Panel</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        .user-table th,
+        .user-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .user-table th {
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-premium {
+            background: rgba(250, 204, 21, 0.2);
+            color: #facc15;
+            border: 1px solid #facc15;
+        }
+
+        .badge-standard {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+            border: 1px solid #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        if (!localStorage.getItem("isAdmin")) {
+            window.location.href = "admin-login.html";
+        }
+    </script>
+
+    <nav class="scrolled">
+        <a href="../index.html" class="logo">MultiZone Admin</a>
+        <div class="nav-links">
+            <a href="admin-dashboard.html">Dashboard</a>
+            <button class="btn btn-glass" onclick="logoutAdmin()">Sign Out</button>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <header style="margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <h1 style="font-size: 2.5rem;">User Management</h1>
+                <p style="color: var(--text-muted);">View and manage registered platform members.</p>
+            </div>
+            <div class="glass" style="padding: 1rem 1.5rem;">
+                <span style="color: var(--text-muted);">Total Users:</span> <b id="userCount">0</b>
+            </div>
+        </header>
+
+        <section class="glass" style="padding: 2rem; overflow-x: auto;">
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Identifier</th>
+                        <th>City</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userList">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <p>Fetching user directory...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkuYIwCIyIaV96-XzWli6js6ef3VO04R0",
+            authDomain: "multizone-893ed.firebaseapp.com",
+            projectId: "multizone-893ed",
+            storageBucket: "multizone-893ed.firebasestorage.app",
+            messagingSenderId: "919907268865",
+            appId: "1:919907268865:web:6f620b330d43afa8134300"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadUsers() {
+            const userList = document.getElementById("userList");
+            const userCount = document.getElementById("userCount");
+
+            try {
+                const snapshot = await getDocs(collection(db, "users"));
+                const users = [];
+                snapshot.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
+
+                userList.innerHTML = "";
+                userCount.innerText = users.length;
+
+                if (users.length === 0) {
+                    userList.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 3rem; color: var(--text-muted);">No users registered yet.</td></tr>`;
+                    return;
+                }
+
+                users.forEach(u => {
+                    const tr = document.createElement("tr");
+                    tr.className = "reveal animate-fade-in";
+                    tr.innerHTML = `
+                        <td style="font-weight: 600;">${u.name || 'Member'}</td>
+                        <td style="color: var(--text-muted); font-size: 0.9rem;">${u.identifier || 'N/A'}</td>
+                        <td>${u.city || 'N/A'}</td>
+                        <td>${u.type || 'N/A'}</td>
+                        <td><span class="badge ${u.isPremium ? 'badge-premium' : 'badge-standard'}">${u.isPremium ? 'PREMIUM' : 'STANDARD'}</span></td>
+                        <td>
+                            <button class="btn btn-glass" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="deleteUser('${u.id}')">
+                                <i class="fas fa-trash" style="color: #ef4444"></i>
+                            </button>
+                        </td>
+                    `;
+                    userList.appendChild(tr);
+                });
+            } catch (err) {
+                console.error("Error fetching users:", err);
+                userList.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #ef4444;">Failed to load user directory.</td></tr>`;
+            }
+        }
+
+        window.deleteUser = async (id) => {
+            if (confirm("Permanently remove this user?")) {
+                try {
+                    await deleteDoc(doc(db, "users", id));
+                    loadUsers();
+                } catch (err) {
+                    alert("Delete failed: " + err.message);
+                }
+            }
+        };
+
+        window.logoutAdmin = () => {
+            localStorage.removeItem("isAdmin");
+            window.location.href = "admin-login.html";
+        };
+
+        loadUsers();
+    </script>
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

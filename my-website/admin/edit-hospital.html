@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Hospital | Admin Panel</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <script>
+        if (!localStorage.getItem("isAdmin")) {
+            window.location.href = "admin-login.html";
+        }
+    </script>
+
+    <nav class="scrolled">
+        <a href="../index.html" class="logo">MultiZone Admin</a>
+        <div class="nav-links">
+            <a href="admin-dashboard.html">Dashboard</a>
+            <a href="add-hospitals.html">Back to Registry</a>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <div class="glass" style="padding: 3rem; max-width: 800px; margin: 2rem auto;">
+            <h2 style="margin-bottom: 2rem;">Edit Hospital Profile</h2>
+
+            <form id="editHospitalForm">
+                <input type="hidden" id="hospitalId">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="form-group">
+                        <label>Hospital Name</label>
+                        <input type="text" id="hName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>City Location</label>
+                        <select id="hCity" required>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Bangalore">Bangalore</option>
+                            <option value="Chennai">Chennai</option>
+                            <option value="Kolkata">Kolkata</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Primary Specialty</label>
+                        <select id="hDisease" required>
+                            <option value="Heart">Cardiology</option>
+                            <option value="Brain">Neurology</option>
+                            <option value="Bones">Orthopedics</option>
+                            <option value="Skin">Dermatology</option>
+                            <option value="Eye">Ophthalmology</option>
+                            <option value="Dental">Dental Care</option>
+                            <option value="General">General</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Platform Rating (1-5)</label>
+                        <input type="number" id="hRating" step="0.1" min="1" max="5" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Full Mailing Address</label>
+                    <textarea id="hAddress" rows="3" required></textarea>
+                </div>
+                <div style="display: flex; gap: 1.5rem; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-primary" style="padding: 1rem 2.5rem;">Update Hospital</button>
+                    <button type="button" class="btn btn-glass" onclick="history.back()">Discard Changes</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()"
+                        style="margin-left: auto;">Delete Registry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getHospitals, deleteItem } from '../assets/js/db.js';
+        import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+        // In a real app we'd share the DB instance, but for simplicity here:
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkuYIwCIyIaV96-XzWli6js6ef3VO04R0",
+            authDomain: "multizone-893ed.firebaseapp.com",
+            projectId: "multizone-893ed",
+            storageBucket: "multizone-893ed.firebasestorage.app",
+            messagingSenderId: "919907268865",
+            appId: "1:919907268865:web:6f620b330d43afa8134300"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const hospitalId = localStorage.getItem("editHospitalId");
+
+        async function init() {
+            if (!hospitalId) {
+                alert("No hospital selected!");
+                window.location.href = "add-hospitals.html";
+                return;
+            }
+
+            const hospitals = await getHospitals();
+            const h = hospitals.find(item => item.id === hospitalId);
+
+            if (!h) {
+                alert("Hospital not found!");
+                window.location.href = "add-hospitals.html";
+                return;
+            }
+
+            document.getElementById("hospitalId").value = h.id;
+            document.getElementById("hName").value = h.name;
+            document.getElementById("hCity").value = h.city;
+            document.getElementById("hDisease").value = h.disease;
+            document.getElementById("hRating").value = h.rating;
+            document.getElementById("hAddress").value = h.address || "";
+        }
+
+        document.getElementById("editHospitalForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerText = "Saving...";
+
+            const updatedData = {
+                name: document.getElementById("hName").value,
+                city: document.getElementById("hCity").value,
+                disease: document.getElementById("hDisease").value,
+                rating: parseFloat(document.getElementById("hRating").value),
+                address: document.getElementById("hAddress").value
+            };
+
+            try {
+                const docRef = doc(db, "hospitals", hospitalId);
+                await updateDoc(docRef, updatedData);
+                alert("Hospital profile updated successfully! 🏥");
+                window.location.href = "add-hospitals.html";
+            } catch (err) {
+                alert("Error updating: " + err.message);
+                btn.disabled = false;
+                btn.innerText = "Update Hospital";
+            }
+        });
+
+        window.confirmDelete = async () => {
+            if (confirm("Are you sure you want to permanently delete this registry?")) {
+                await deleteItem("hospitals", hospitalId);
+                window.location.href = "add-hospitals.html";
+            }
+        };
+
+        init();
+    </script>
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

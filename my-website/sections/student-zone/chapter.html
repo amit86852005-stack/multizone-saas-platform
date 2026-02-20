@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapters | MultiZone</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="scrolled">
+        <a href="../../index.html" class="logo">MultiZone Student</a>
+        <div class="nav-links">
+            <a href="subject.html">Back to Subjects</a>
+        </div>
+    </nav>
+
+    <header class="dashboard-container" style="text-align: center;">
+        <h2 id="subjectTitle">Chapters</h2>
+        <p>Pick a chapter to start reading.</p>
+    </header>
+
+    <div class="card-grid" style="padding: 0 10% 5rem;" id="chapterGrid">
+        <!-- Chapters loaded from DB -->
+    </div>
+
+    <script type="module">
+        import { getNotes } from '../../assets/js/db.js';
+
+        const selectedClass = localStorage.getItem("selectedClass");
+        const selectedSubject = localStorage.getItem("selectedSubject");
+        document.getElementById("subjectTitle").innerText = `${selectedSubject} (Class ${selectedClass})`;
+
+        async function loadChapters() {
+            const notes = await getNotes();
+            const grid = document.getElementById("chapterGrid");
+
+            const chapters = notes.filter(n => n.class === selectedClass && n.subject === selectedSubject);
+
+            if (chapters.length === 0) {
+                grid.innerHTML = "<p>No chapters found.</p>";
+                return;
+            }
+
+            grid.innerHTML = "";
+            chapters.forEach(n => {
+                const card = document.createElement("div");
+                card.className = "dash-card glass animate-fade-in";
+                card.innerHTML = `
+                    <i class="fas fa-bookmark"></i>
+                    <h3>${n.chapter}</h3>
+                    <p>Revision Material Available</p>
+                `;
+                card.onclick = () => {
+                    localStorage.setItem("selectedNoteId", n.id);
+                    window.location.href = "notes.html";
+                };
+                grid.appendChild(card);
+            });
+        }
+
+        loadChapters();
+    </script>
+</body>
+
+</html>

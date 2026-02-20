@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Analytics | Admin Panel</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .chart-container {
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            padding: 2rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--primary), var(--primary-light));
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .bar:hover {
+            filter: brightness(1.2);
+            transform: scaleX(1.1);
+        }
+
+        .bar::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .report-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--glass-border);
+            transition: var(--transition);
+        }
+
+        .report-item:last-child {
+            border-bottom: none;
+        }
+
+        .report-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            margin-left: -0.5rem;
+            margin-right: -0.5rem;
+            border-radius: 8px;
+        }
+
+        .report-item i {
+            margin-right: 1rem;
+            color: var(--primary-light);
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .report-item span {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        if (!localStorage.getItem("isAdmin")) {
+            window.location.href = "admin-login.html";
+        }
+    </script>
+
+    <nav class="scrolled">
+        <a href="../index.html" class="logo">MultiZone Admin</a>
+        <div class="nav-links">
+            <a href="admin-dashboard.html">Dashboard</a>
+            <button class="btn btn-glass" onclick="logoutAdmin()">Sign Out</button>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <header style="margin-bottom: 3rem;">
+            <h1 style="font-size: 2.5rem;">Platform Analytics</h1>
+            <p style="color: var(--text-muted);">Real-time usage and demographic insights.</p>
+        </header>
+
+        <section class="stats-grid">
+            <div class="glass" style="padding: 2rem;">
+                <h4 style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Active Users</h4>
+                <div style="font-size: 2.5rem; font-weight: 800; margin: 0.5rem 0;" id="userCount">...</div>
+                <div style="color: var(--accent); font-size: 0.85rem;"><i class="fas fa-arrow-up"></i> Live Tracking
+                </div>
+            </div>
+            <div class="glass" style="padding: 2rem;">
+                <h4 style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Clinics Registered
+                </h4>
+                <div style="font-size: 2.5rem; font-weight: 800; margin: 0.5rem 0;" id="hospitalCount">...</div>
+                <div style="color: var(--secondary); font-size: 0.85rem;"><i class="fas fa-hospital"></i> Total Hubs
+                </div>
+            </div>
+            <div class="glass" style="padding: 2rem;">
+                <h4 style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Study Resources</h4>
+                <div style="font-size: 2.5rem; font-weight: 800; margin: 0.5rem 0;" id="noteCount">...</div>
+                <div style="color: var(--primary-light); font-size: 0.85rem;">Notes in Library</div>
+            </div>
+        </section>
+
+        <section class="glass" style="padding: 2rem; margin-bottom: 3rem;">
+            <h3 style="margin-bottom: 2rem;">Weekly Traffic Flow</h3>
+            <div class="chart-container">
+                <div class="bar" style="height: 40%;" data-label="Mon"></div>
+                <div class="bar" style="height: 65%;" data-label="Tue"></div>
+                <div class="bar" style="height: 85%;" data-label="Wed"></div>
+                <div class="bar" style="height: 60%;" data-label="Thu"></div>
+                <div class="bar" style="height: 95%;" data-label="Fri"></div>
+                <div class="bar" style="height: 70%;" data-label="Sat"></div>
+                <div class="bar" style="height: 50%;" data-label="Sun"></div>
+            </div>
+        </section>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <section class="glass" style="padding: 2.5rem;">
+                <h3 style="margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fas fa-layer-group" style="color: var(--primary-light); font-size: 1.25rem;"></i>
+                    Popular Zones
+                </h3>
+                <div class="report-item"><span><i class="fas fa-user-graduate"></i> Student Hub</span> <b>42%</b></div>
+                <div class="report-item"><span><i class="fas fa-heartbeat"></i> Healthcare Finder</span> <b>28%</b>
+                </div>
+                <div class="report-item"><span><i class="fas fa-female"></i> Women Special</span> <b>18%</b></div>
+                <div class="report-item"><span><i class="fas fa-rocket"></i> Career Launchpad</span> <b>12%</b></div>
+            </section>
+            <section class="glass" style="padding: 2.5rem;">
+                <h3 style="margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="fas fa-map-marked-alt" style="color: var(--secondary); font-size: 1.25rem;"></i>
+                    Regional Engagement
+                </h3>
+                <div class="report-item"><span><i class="fas fa-city"></i> Delhi NCR</span> <b>350+</b></div>
+                <div class="report-item"><span><i class="fas fa-ship"></i> Mumbai</span> <b>210+</b></div>
+                <div class="report-item"><span><i class="fas fa-microchip"></i> Bangalore</span> <b>180+</b></div>
+                <div class="report-item"><span><i class="fas fa-globe"></i> Other Cities</span> <b>544+</b></div>
+            </section>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkuYIwCIyIaV96-XzWli6js6ef3VO04R0",
+            authDomain: "multizone-893ed.firebaseapp.com",
+            projectId: "multizone-893ed",
+            storageBucket: "multizone-893ed.firebasestorage.app",
+            messagingSenderId: "919907268865",
+            appId: "1:919907268865:web:6f620b330d43afa8134300"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function updateLiveStats() {
+            try {
+                const [users, hospitals, notes] = await Promise.all([
+                    getDocs(collection(db, "users")),
+                    getDocs(collection(db, "hospitals")),
+                    getDocs(collection(db, "notes"))
+                ]);
+
+                document.getElementById("userCount").innerText = users.size;
+                document.getElementById("hospitalCount").innerText = hospitals.size;
+                document.getElementById("noteCount").innerText = notes.size;
+
+                // Proportionally set bars for a mock "Traffic" look based on data density
+                const bars = document.querySelectorAll('.bar');
+                bars.forEach(bar => {
+                    const noise = Math.floor(Math.random() * 20); // Randomness for visual effect
+                    bar.style.height = (40 + (users.size * 2) + noise) + "%";
+                });
+
+            } catch (err) {
+                console.error("Analytics fetch failed:", err);
+            }
+        }
+
+        window.logoutAdmin = () => {
+            localStorage.removeItem("isAdmin");
+            window.location.href = "admin-login.html";
+        };
+
+        updateLiveStats();
+    </script>
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Notes | MultiZone Student</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .notes-viewer {
+            max-width: 900px;
+            margin: 100px auto 50px;
+            padding: 3rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        .notes-content {
+            margin-top: 2rem;
+            color: var(--text);
+            white-space: pre-wrap;
+            /* Preserve line breaks */
+        }
+
+        .note-header {
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="scrolled">
+        <a href="../../index.html" class="logo">MultiZone Student</a>
+        <div class="nav-links">
+            <a href="chapter.html">Back to Chapters</a>
+            <button class="btn btn-glass" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+        </div>
+    </nav>
+
+    <main class="notes-viewer glass animate-fade-in" id="noteContainer">
+        <p>Opening document...</p>
+    </main>
+
+    <script type="module">
+        import { getNotes } from '../../assets/js/db.js';
+
+        async function loadNoteContent() {
+            const noteId = localStorage.getItem("selectedNoteId");
+            const container = document.getElementById("noteContainer");
+
+            try {
+                const notes = await getNotes();
+                const note = notes.find(n => n.id === noteId);
+
+                if (!note) {
+                    container.innerHTML = "<h2>Notes not found.</h2><p>The document may have been removed.</p>";
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="breadcrumb">
+                        Student Zone > Class ${note.class} > ${note.subject}
+                    </div>
+                    <div class="note-header">
+                        <h1 style="color: var(--primary-light)">${note.chapter}</h1>
+                        <p style="color: var(--text-muted)">Created: ${new Date(note.createdAt).toLocaleDateString()}</p>
+                    </div>
+                    <div class="notes-content">
+                        ${note.content}
+                    </div>
+                    <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); text-align: center;">
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">End of Chapter. Keep Learning!</p>
+                        <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="history.back()">Done Reading</button>
+                    </div>
+                `;
+            } catch (err) {
+                container.innerHTML = "<h2>Error loading notes.</h2>";
+            }
+        }
+
+        loadNoteContent();
+    </script>
+</body>
+
+</html>

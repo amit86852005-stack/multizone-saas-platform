@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Profile | MultiZone</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .option-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .option-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+        }
+
+        .option-card input {
+            width: auto;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body class="auth-page">
+
+    <div class="auth-container glass animate-fade-in" style="max-width: 500px;">
+        <h2 style="margin-bottom: 0.5rem;">Almost There!</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Personalize your MultiZone
+            experience.</p>
+
+        <form id="onboardingForm">
+            <div class="form-group">
+                <label>Primary Interest</label>
+                <div class="option-card" onclick="this.querySelector('input').click()">
+                    <input type="radio" name="userType" value="student" required>
+                    <div>
+                        <div style="font-weight: 600;">Academic Student</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Notes, Books & AI Explainer</div>
+                    </div>
+                </div>
+                <div class="option-card" onclick="this.querySelector('input').click()">
+                    <input type="radio" name="userType" value="job">
+                    <div>
+                        <div style="font-weight: 600;">Career Seeker</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Jobs, Internships & Resume tools
+                        </div>
+                    </div>
+                </div>
+                <div class="option-card" onclick="this.querySelector('input').click()">
+                    <input type="radio" name="userType" value="woman">
+                    <div>
+                        <div style="font-weight: 600;">Women Empowerment</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Health, Safety & Community</div>
+                    </div>
+                </div>
+                <div class="option-card" onclick="this.querySelector('input').click()">
+                    <input type="radio" name="userType" value="general">
+                    <div>
+                        <div style="font-weight: 600;">Healthcare & General</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">Hospital Finder & Utility Tools</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Your City</label>
+                <input type="text" id="userCity" placeholder="e.g. New Delhi" required>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">We use this to show nearby
+                    services.</p>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Setup My Hub</button>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCkuYIwCIyIaV96-XzWli6js6ef3VO04R0",
+            authDomain: "multizone-893ed.firebaseapp.com",
+            projectId: "multizone-893ed",
+            storageBucket: "multizone-893ed.firebasestorage.app",
+            messagingSenderId: "919907268865",
+            appId: "1:919907268865:web:6f620b330d43afa8134300"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.getElementById("onboardingForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.innerText = "Configuring...";
+
+            // Update user in localStorage
+            const localUser = JSON.parse(localStorage.getItem("user") || "{}");
+            const userType = e.target.userType.value;
+            const userCity = document.getElementById("userCity").value;
+
+            localUser.type = userType;
+            localUser.city = userCity;
+
+            localStorage.setItem("user", JSON.stringify(localUser));
+
+            try {
+                // If guest, skip database save
+                if (localStorage.getItem("isGuest") === "true") {
+                    setTimeout(() => {
+                        window.location.href = "../dashboard/dashboard.html";
+                    }, 500);
+                    return;
+                }
+
+                // Save to Firebase users collection
+                await addDoc(collection(db, "users"), {
+                    name: localUser.name || "Member",
+                    identifier: localUser.email || localUser.phone || "Unknown",
+                    type: userType,
+                    city: userCity,
+                    isPremium: false,
+                    createdAt: new Date().toISOString()
+                });
+
+                setTimeout(() => {
+                    window.location.href = "../dashboard/dashboard.html";
+                }, 800);
+            } catch (err) {
+                console.error("Error saving user profile:", err);
+                // Redirect anyway to allow usage, but log error
+                window.location.href = "../dashboard/dashboard.html";
+            }
+        });
+    </script>
+</body>
+
+</html>

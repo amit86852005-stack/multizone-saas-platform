@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Subject | MultiZone</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="scrolled">
+        <a href="../../index.html" class="logo">MultiZone Student</a>
+        <div class="nav-links">
+            <a href="student-home.html">Back to Classes</a>
+        </div>
+    </nav>
+
+    <header class="dashboard-container" style="text-align: center;">
+        <h2 id="classTitle">Select Your Subject</h2>
+        <p>Expertly curated notes and study guides.</p>
+    </header>
+
+    <div class="card-grid" style="padding: 0 10% 5rem;" id="subjectGrid">
+        <!-- Subjects will be filtered from database notes or hardcoded common ones -->
+    </div>
+
+    <script type="module">
+        import { getNotes } from '../../assets/js/db.js';
+
+        const selectedClass = localStorage.getItem("selectedClass");
+        document.getElementById("classTitle").innerText = `Class ${selectedClass} - Subjects`;
+
+        async function loadSubjects() {
+            const notes = await getNotes();
+            const grid = document.getElementById("subjectGrid");
+
+            // Get unique subjects for this class
+            const subjects = [...new Set(notes
+                .filter(n => n.class === selectedClass)
+                .map(n => n.subject))];
+
+            if (subjects.length === 0) {
+                grid.innerHTML = `
+                    <div class="glass" style="grid-column: 1/-1; padding: 3rem; text-align: center;">
+                        <i class="fas fa-folder-open" style="font-size: 3rem; color: var(--text-muted);"></i>
+                        <p style="margin-top: 1rem;">No notes available for Class ${selectedClass} yet.</p>
+                        <a href="student-home.html" class="btn btn-primary" style="margin-top: 1rem;">Select Another Class</a>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = "";
+            subjects.forEach(subject => {
+                const card = document.createElement("div");
+                card.className = "dash-card glass animate-fade-in";
+                card.innerHTML = `
+                    <i class="fas fa-file-alt"></i>
+                    <h3>${subject}</h3>
+                    <p>View all chapters</p>
+                `;
+                card.onclick = () => {
+                    localStorage.setItem("selectedSubject", subject);
+                    window.location.href = "chapter.html";
+                };
+                grid.appendChild(card);
+            });
+        }
+
+        loadSubjects();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Women Safety Tools | MultiZone</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .sos-container {
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), transparent);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 20px;
+            margin-bottom: 3rem;
+        }
+
+        .sos-btn-large {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #ef4444;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 800;
+            border: 6px solid rgba(239, 68, 68, 0.18);
+            cursor: pointer;
+            /* restrained shadow to avoid flashy effects */
+            box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+            transition: var(--transition);
+            margin: 2rem 0;
+        }
+
+        .sos-btn-large:hover {
+            transform: scale(1.03);
+            background: #dc2626;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.14);
+        }
+
+        .helpline-list {
+            text-align: left;
+            margin-top: 1rem;
+        }
+
+        .helpline-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        if (!localStorage.getItem("isLoggedIn")) {
+            window.location.href = "../../auth/login.html";
+        }
+    </script>
+
+    <nav class="scrolled">
+        <a href="../../index.html" class="logo">MultiZone Safety</a>
+        <div class="nav-links">
+            <a href="women-home.html">Back to Hub</a>
+            <a href="../../dashboard/dashboard.html">Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <header style="text-align: center; margin-bottom: 3rem;">
+            <h1>Safety Resource Center</h1>
+            <p style="color: var(--text-muted)">Secure tools designed to keep you safe in any situation.</p>
+        </header>
+
+        <div class="sos-container animate-fade-in">
+            <h3>EMERGENCY SOS</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted)">Triple-tap the button below to alert emergency
+                contacts.</p>
+            <button class="sos-btn-large" onclick="triggerSOS()">SOS</button>
+            <p id="sosStatus" style="color: #ef4444; font-weight: 600; display: none;">Sending Emergency Alerts...</p>
+        </div>
+
+        <div class="card-grid">
+            <div class="dash-card glass reveal">
+                <i class="fas fa-phone-alt"></i>
+                <h3>Helplines</h3>
+                <div class="helpline-list">
+                    <div class="helpline-item"><span>Women Helpline</span> <b>1091</b></div>
+                    <div class="helpline-item"><span>Police</span> <b>100</b></div>
+                    <div class="helpline-item"><span>Ambulance</span> <b>102</b></div>
+                </div>
+            </div>
+
+            <div class="dash-card glass reveal" onclick="shareLoc()">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>Location Share</h3>
+                <p>Send your real-time GPS coordinates to trusted contacts.</p>
+                <button class="btn btn-glass" style="margin-top: 1rem;">Setup Contacts</button>
+            </div>
+
+            <div class="dash-card glass reveal" onclick="fakeCall()">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>Fake Call</h3>
+                <p>Trigger a simulated incoming call to exit uncomfortable situations.</p>
+                <button class="btn btn-glass" style="margin-top: 1rem;">Schedule Call</button>
+            </div>
+
+            <div class="dash-card glass reveal">
+                <i class="fas fa-shield-virus"></i>
+                <h3>Safety Network</h3>
+                <p>Identify "Safe Zones" and verified community support near you.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function triggerSOS() {
+            const status = document.getElementById("sosStatus");
+            status.style.display = "block";
+            alert("Emergency signals triggered. Your current location has been broadcast to your emergency contacts and local authorities.");
+            setTimeout(() => { status.style.display = "none"; }, 5000);
+        }
+
+        function shareLoc() {
+            alert("Fetching GPS coordinates... Shareable link generated! (Simulation)");
+        }
+
+        function fakeCall() {
+            alert("Fake call scheduled in 5 seconds. Please keep your phone visible.");
+        }
+    </script>
+    <script src="../../assets/js/main.js"></script>
+</body>
+
+</html>

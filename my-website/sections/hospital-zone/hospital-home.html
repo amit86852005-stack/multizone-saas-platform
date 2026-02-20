@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Zone | MultiZone Healthcare</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <script>
+        if (!localStorage.getItem("isLoggedIn")) {
+            window.location.href = "../../auth/login.html";
+        }
+    </script>
+
+    <nav class="scrolled">
+        <a href="../../index.html" class="logo">MultiZone Health</a>
+        <div class="nav-links">
+            <a href="../../dashboard/dashboard.html">Dashboard</a>
+            <a href="hospital-home.html">Health Home</a>
+        </div>
+    </nav>
+
+    <header class="dashboard-container" style="text-align: center;">
+        <h1 class="animate-fade-in" style="font-size: 3.5rem; margin-bottom: 1rem;">Healthcare module — provider and record management</h1>
+        <p class="animate-fade-in" style="font-size: 1.2rem; color: var(--text-muted);">Search providers, manage basic patient records, and book appointments. Tools: provider directory, bookings, and record lookup.</p>
+    </header>
+
+    <div class="card-grid" style="padding: 0 10% 5rem;">
+        <div class="dash-card glass reveal" onclick="selectCity('Delhi')">
+            <i class="fas fa-city"></i>
+            <h3>Delhi NCR</h3>
+            <p>Top Government & Private Institutions</p>
+        </div>
+
+        <div class="dash-card glass reveal" onclick="selectCity('Mumbai')">
+            <i class="fas fa-ship"></i>
+            <h3>Mumbai</h3>
+            <p>Advanced Specialty Clinics</p>
+        </div>
+
+        <div class="dash-card glass reveal" onclick="selectCity('Bangalore')">
+            <i class="fas fa-microchip"></i>
+            <h3>Bangalore</h3>
+            <p>Tech-Enabled Medical Centers</p>
+        </div>
+
+        <div class="dash-card glass reveal" onclick="selectCity('Chennai')">
+            <i class="fas fa-umbrella-beach"></i>
+            <h3>Chennai</h3>
+            <p>Medical Research Facilities</p>
+        </div>
+
+        <div class="dash-card glass reveal" onclick="selectCity('Kolkata')">
+            <i class="fas fa-landmark"></i>
+            <h3>Kolkata</h3>
+            <p>Heritage Healthcare Excellence</p>
+        </div>
+
+        <div class="dash-card glass reveal" onclick="location.href='hospital-ai.html'"
+            style="border: 1px solid var(--accent);">
+            <i class="fas fa-user-md" style="color: var(--accent)"></i>
+            <h3>Health Assistant</h3>
+            <p>Reference tool for health topics and guidance; not a substitute for professional medical advice.</p>
+        </div>
+    </div>
+
+    <script>
+        function selectCity(city) {
+            localStorage.setItem("selectedCity", city);
+            window.location.href = "disease.html";
+        }
+    </script>
+
+    <script src="../../assets/js/main.js"></script>
+</body>
+
+</html>

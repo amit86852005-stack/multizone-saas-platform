@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Hospitals | Admin Panel</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <script>
+        if (!localStorage.getItem("isAdmin")) {
+            window.location.href = "admin-login.html";
+        }
+    </script>
+
+    <nav class="scrolled">
+        <a href="../index.html" class="logo">MultiZone Admin</a>
+        <div class="nav-links">
+            <a href="admin-dashboard.html">Dashboard</a>
+            <a href="add-notes.html">Notes</a>
+            <a href="add-hospitals.html">Hospitals</a>
+            <button class="btn btn-glass" onclick="logoutAdmin()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2>Hospital Management</h2>
+            <button class="btn btn-primary" onclick="toggleForm()">+ Add New Hospital</button>
+        </div>
+
+        <!-- Add Hospital Form (Hidden by default) -->
+        <div id="addForm" class="glass" style="display: none; padding: 2rem; margin-bottom: 2rem;">
+            <h3 style="margin-bottom: 1.5rem;">Add New Hospital</h3>
+            <form id="hospitalForm">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Hospital Name</label>
+                        <input type="text" id="hName" placeholder="e.g. AIIMS Delhi" required>
+                    </div>
+                    <div class="form-group">
+                        <label>City</label>
+                        <select id="hCity" required>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Bangalore">Bangalore</option>
+                            <option value="Chennai">Chennai</option>
+                            <option value="Kolkata">Kolkata</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Specialty/Disease Focus</label>
+                        <select id="hDisease" required>
+                            <option value="Heart">Cardiology</option>
+                            <option value="Brain">Neurology</option>
+                            <option value="Bones">Orthopedics</option>
+                            <option value="Skin">Dermatology</option>
+                            <option value="Eye">Ophthalmology</option>
+                            <option value="Dental">Dental Care</option>
+                            <option value="General">General</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Rating (1-5)</label>
+                        <input type="number" id="hRating" step="0.1" min="1" max="5" placeholder="4.5" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Full Address</label>
+                    <textarea id="hAddress" rows="2" placeholder="Street, Area, Zip Code" required></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">Save Hospital</button>
+                    <button type="button" class="btn btn-glass" onclick="toggleForm()">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Hospital List -->
+        <div id="hospitalList" class="card-grid" style="margin-top: 0;">
+            <!-- Content loaded via db.js -->
+            <p>Loading hospitals...</p>
+        </div>
+    </div>
+
+    <!-- Firebase / DB Logic -->
+    <script type="module">
+        import { addHospital, getHospitals, deleteItem } from '../assets/js/db.js';
+
+        // Load Hospitals
+        async function loadHospitals() {
+            const list = document.getElementById("hospitalList");
+            const hospitals = await getHospitals();
+
+            if (hospitals.length === 0) {
+                list.innerHTML = "<div class='glass' style='padding: 2rem; grid-column: 1/-1; text-align: center;'><p>No hospitals registered yet.</p></div>";
+                return;
+            }
+
+            list.innerHTML = "";
+            hospitals.forEach(h => {
+                const card = document.createElement("div");
+                card.className = "glass hospital-card animate-fade-in";
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <h3 style="color: var(--primary-light)">${h.name}</h3>
+                            <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.5rem 0;">
+                                <i class="fas fa-map-marker-alt"></i> ${h.city} | <i class="fas fa-stethoscope"></i> ${h.disease}
+                            </p>
+                            <div style="color: #fbbf24; font-size: 0.9rem;">
+                                ${'★'.repeat(Math.floor(h.rating))}${h.rating % 1 >= 0.5 ? '½' : ''} (${h.rating})
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-glass" style="padding: 0.5rem; font-size: 0.8rem;" onclick="editH('${h.id}')">
+                                <i class="fas fa-edit" style="color: var(--primary-light)"></i>
+                            </button>
+                            <button class="btn btn-glass" style="padding: 0.5rem; font-size: 0.8rem;" onclick="deleteH('${h.id}')">
+                                <i class="fas fa-trash" style="color: #ef4444"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        // Edit Exposure
+        window.editH = (id) => {
+            localStorage.setItem("editHospitalId", id);
+            window.location.href = "edit-hospital.html";
+        };
+
+        // Add Hospital
+        document.getElementById("hospitalForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerText = "Saving...";
+
+            const hospital = {
+                name: document.getElementById("hName").value,
+                city: document.getElementById("hCity").value,
+                disease: document.getElementById("hDisease").value,
+                rating: parseFloat(document.getElementById("hRating").value),
+                address: document.getElementById("hAddress").value,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                await addHospital(hospital);
+                e.target.reset();
+                toggleForm();
+                loadHospitals();
+            } catch (err) {
+                alert("Error saving: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Save Hospital";
+            }
+        });
+
+        // Delete (Exposure hack since module)
+        window.deleteH = async (id) => {
+            if (confirm("Delete this hospital?")) {
+                await deleteItem("hospitals", id);
+                loadHospitals();
+            }
+        };
+
+        window.toggleForm = () => {
+            const form = document.getElementById("addForm");
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        };
+
+        window.logoutAdmin = () => {
+            localStorage.removeItem("isAdmin");
+            window.location.href = "admin-login.html";
+        };
+
+        // Initial Load
+        loadHospitals();
+    </script>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

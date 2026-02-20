@@ -1,0 +1,856 @@
+/* Get fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+/* ============================================================================
+   MULTI-ZONE COLOR SYSTEM - Global & Zone-Specific
+   Color Ratio: 60% Background, 30% Cards, 10% Accents
+   ============================================================================ */
+
+/* Global Base Colors - Used as default for all zones */
+:root {
+    /* ---- GLOBAL BASE COLORS (60-30-10 Rule) ---- */
+    /* 60% - Background: darkest color for primary surface */
+    --background: #0F172A;
+    --background-secondary: #111827;
+    
+    /* 30% - Cards: lighter dark color for secondary surfaces */
+    --card-bg: #1E293B;
+    --card-bg-secondary: #2D3B4F;
+    
+    /* 10% - Accents: zone-specific bright colors */
+    --text: #E5E7EB;
+    --text-secondary: #94A3B8;
+    --text-muted: #94A3B8;
+    /* Primary color RGB for softened shadows/glows (default = student) */
+    --primary-rgb: 59, 130, 246;
+    --primary-light-rgb: 96, 165, 250;
+    
+    /* ---- BASE/STUDENT ZONE COLORS (Default) ---- */
+    --primary: #3B82F6;
+    --primary-light: #60A5FA;
+    --primary-lighter: #93C5FD;
+    --primary-dark: #2563EB;
+    --secondary: #1E3A8A;
+    --gradient-start: #1E3A8A;
+    --gradient-end: #2563EB;
+    --accent: #3B82F6;
+
+    /* Border & Effects */
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    /* Reduced glow intensity for a more professional tone */
+    --glow-shadow: 0 0 6px rgba(var(--primary-rgb), 0.06);
+    
+    /* Typography & Layout */
+    --transition: all 0.3s ease;
+    --radius: 12px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+/* Get fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+/* ============================================================================
+   MULTI-ZONE COLOR SYSTEM - Global & Zone-Specific
+   Color Ratio: 60% Background, 30% Cards, 10% Accents
+   ============================================================================ */
+
+/* Global Base Colors - Used as default for all zones */
+:root {
+    /* ---- GLOBAL BASE COLORS (60-30-10 Rule) ---- */
+    /* 60% - Background: darkest color for primary surface */
+    --background: #0F172A;
+    --background-secondary: #0D1628;
+    
+    /* 30% - Cards: lighter dark color for secondary surfaces */
+    --card-bg: #1E293B;
+    --card-bg-secondary: #2D3B4F;
+    
+    /* 10% - Accents: zone-specific bright colors */
+    --text: #E5E7EB;
+    --text-secondary: #CBD5E1;
+    --text-muted: #94A3B8;
+    
+    /* ---- BASE/STUDENT ZONE COLORS (Default) ---- */
+    --primary: #3B82F6;
+    --primary-light: #60A5FA;
+    --primary-lighter: #93C5FD;
+    --primary-dark: #2563EB;
+    --secondary: #1E3A8A;
+    --gradient-start: #1E3A8A;
+    --gradient-end: #2563EB;
+    --accent: #3B82F6;
+
+    /* Border & Effects */
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    /* Reduced glow intensity for a more professional tone */
+    --glow-shadow: 0 0 6px rgba(59, 130, 246, 0.06);
+    
+    /* Typography & Layout */
+    --transition: all 0.3s ease;
+    --radius: 12px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================================================
+   STUDENT ZONE - Blue/Sapphire (#3B82F6)
+   Primary: #3B82F6 | Gradient: #1E3A8A → #2563EB
+   ============================================================================ */
+.student-zone {
+    --primary: #3B82F6;
+    --primary-light: #60A5FA;
+    --primary-lighter: #93C5FD;
+    --primary-dark: #2563EB;
+    --secondary: #1E3A8A;
+    --gradient-start: #1E3A8A;
+    --gradient-end: #2563EB;
+    --accent: #3B82F6;
+}
+
+.student-zone .glass {
+    --glass-bg: rgba(59, 130, 246, 0.02);
+}
+
+/* ============================================================================
+   HOSPITAL ZONE - Teal/Turquoise (#14B8A6)
+   Primary: #14B8A6 | Gradient: #0F766E → #14B8A6
+   ============================================================================ */
+.hospital-zone {
+    --primary: #14B8A6;
+    --primary-light: #2DD4BF;
+    --primary-lighter: #5EEAD4;
+    --primary-dark: #0F766E;
+    --secondary: #0D6B66;
+    --gradient-start: #0F766E;
+    --gradient-end: #14B8A6;
+    --accent: #14B8A6;
+}
+
+.hospital-zone .glass {
+    --glass-bg: rgba(20, 184, 166, 0.02);
+}
+
+/* ============================================================================
+   WOMEN ZONE - Purple/Violet (#A855F7)
+   Primary: #A855F7 | Gradient: #6B21A8 → #A855F7
+   ============================================================================ */
+.women-zone {
+    --primary: #A855F7;
+    --primary-light: #C084FC;
+    --primary-lighter: #E9D5FF;
+    --primary-dark: #7E22CE;
+    --secondary: #6B21A8;
+    --gradient-start: #6B21A8;
+    --gradient-end: #A855F7;
+    --accent: #A855F7;
+}
+
+.women-zone .glass {
+    --glass-bg: rgba(168, 85, 247, 0.02);
+}
+
+/* ============================================================================
+   CAREER ZONE - Orange (#F97316)
+   Primary: #F97316 | Gradient: #C2410C → #F97316
+   ============================================================================ */
+.career-zone {
+    --primary: #F97316;
+    --primary-light: #FB923C;
+    --primary-lighter: #FED7AA;
+    --primary-dark: #CC2D0E;
+    --secondary: #C2410C;
+    --gradient-start: #C2410C;
+    --gradient-end: #F97316;
+    --accent: #F97316;
+}
+
+.career-zone .glass {
+    --glass-bg: rgba(249, 115, 22, 0.02);
+}
+
+/* ============================================================================
+   CONTROL PANEL / ADMIN ZONE - Cyan (#38BDF8)
+   Background: #111827 | Cards: #1F2937 | Primary: #38BDF8
+   ============================================================================ */
+.admin-zone {
+    --background: #111827;
+    --background-secondary: #0F172A;
+    --card-bg: #1F2937;
+    --card-bg-secondary: #2D3E52;
+    --primary: #38BDF8;
+    --primary-light: #7DD3FC;
+    --primary-lighter: #CFFAFE;
+    --primary-dark: #0284C7;
+    --secondary: #0369A1;
+    --gradient-start: #3B82F6;
+    --gradient-end: #60A5FA;
+    --accent: #38BDF8;
+    --text: #F8FAFC;
+    --text-secondary: #E2E8F0;
+    --text-muted: #CBD5E1;
+}
+
+.admin-zone .glass {
+    --background: #1F2937;
+    --card-bg: #2D3E52;
+}
+
+body.admin-zone {
+    background: #111827;
+}
+
+/* ============================================================================
+   RESET & BASE STYLES
+   ============================================================================ */
+
+/* Remove default spacing from all elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Smooth scrolling for page */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Body styling - main page background (60% of color scheme) */
+body {
+    font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: var(--transition);
+}
+
+/* ============================================================================
+   GLASS MORPHISM COMPONENT (30% of color scheme - Cards)
+   ============================================================================ */
+
+.glass {
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(20px);
+    transition: var(--transition);
+}
+
+.glass:hover {
+    border-color: var(--primary);
+    /* neutral elevation instead of colored glow */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+}
+
+/* ============================================================================
+   TYPOGRAPHY - CONSISTENT ACROSS ALL ZONES
+   ============================================================================ */
+
+/* Headings inherit zone-specific primary colors */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: var(--text);
+    transition: var(--transition);
+}
+
+/* Gradient text effect for headings in zones */
+.gradient-text {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Zone-aware heading colors */
+h1, h2 {
+    color: var(--text);
+}
+
+h1.zone-accent,
+h2.zone-accent,
+h3.zone-accent {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* ============================================================================
+   NAVIGATION
+   ============================================================================ */
+
+/* Navigation Bar */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 1.5rem 10%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition);
+}
+
+/* Navigation when user scrolls down */
+nav.scrolled {
+    padding: 1rem 10%;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+/* Logo text - uses primary color of current zone */
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text);
+    text-decoration: none;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: var(--transition);
+}
+
+.logo:hover {
+    text-shadow: none;
+}
+
+/* Navigation links */
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+/* Individual navigation links */
+.nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+    opacity: 0.85;
+}
+
+/* Hover effect on nav links - uses zone primary color */
+.nav-links a:hover {
+    opacity: 1;
+    color: var(--primary);
+}
+
+/* ============================================================================
+   BUTTONS - ACCENT COLOR (10% of color scheme)
+   ============================================================================ */
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition);
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+/* Primary button - uses zone primary color (10% accent rule) */
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    /* Subtle elevation instead of colored glow */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Glass/Outlined button - uses zone primary color with transparency */
+.btn-glass {
+    background: transparent;
+    border: 1.5px solid var(--primary);
+    color: var(--primary);
+    border-radius: var(--radius);
+}
+
+.btn-glass:hover {
+    background: rgba(59, 130, 246, 0.04);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+}
+
+/* Secondary button */
+.btn-secondary {
+    background: var(--card-bg);
+    color: var(--text);
+    border: 1px solid var(--glass-border);
+}
+
+.btn-secondary:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Danger button - always red regardless of zone */
+.btn-danger {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+    /* restrained danger shadow without colored glow */
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+.btn img {
+    flex-shrink: 0;
+}
+
+/* Auth Pages Specific */
+/* ============================================================================
+   FORMS & INPUTS
+   ============================================================================ */
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Input fields use card background (30% of color scheme) */
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    color: var(--text);
+    outline: none;
+    transition: var(--transition);
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+/* Focus state uses zone primary color */
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary);
+    background: rgba(59, 130, 246, 0.04);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.06);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* ============================================================================
+   AUTHENTICATION PAGES
+   ============================================================================ */
+
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+    background: var(--background);
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 2.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    box-shadow: var(--glass-shadow);
+}
+
+.auth-container h2 {
+    margin-bottom: 2rem;
+    text-align: center;
+    font-size: 2rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.auth-container .btn-primary {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* ============================================================================
+   ANIMATIONS & TRANSITIONS
+   ============================================================================ */
+
+.animate-fade-in {
+    animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: 0.8s all ease;
+}
+
+.reveal.animate-fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Pulse animation for accent elements */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ============================================================================
+   DASHBOARD & CARDS (30% of color scheme)
+   ============================================================================ */
+
+.dashboard-container {
+    margin-top: 80px;
+    padding: 4rem 10%;
+    background: var(--background);
+}
+
+.admin-container {
+    margin-top: 80px;
+    padding: 4rem 10%;
+    background: var(--background);
+}
+
+/* Card grid layout */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* Dashboard card - uses card background (30%) with zone accent hover */
+.dash-card {
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dash-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--primary);
+    /* Remove colored glow; keep neutral elevation */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Dashboard card icon - uses zone primary color (10% accent) */
+.dash-card i {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+    transition: var(--transition);
+}
+
+.dash-card:hover i {
+    transform: scale(1.1);
+}
+
+.dash-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.dash-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* ============================================================================
+   HOSPITAL & NOTE CARDS
+   ============================================================================ */
+
+.hospital-card,
+.note-card {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    transition: var(--transition);
+}
+
+.hospital-card:hover,
+.note-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* ============================================================================
+   UTILITY CLASSES - ZONE-AWARE COLOR UTILITIES
+   ============================================================================ */
+
+/* Text colors */
+.text-primary {
+    color: var(--primary);
+}
+
+.text-secondary {
+    color: var(--secondary);
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+/* Background utilities */
+.bg-primary {
+    background: var(--primary);
+}
+
+.bg-primary-light {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.bg-gradient {
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+}
+
+/* Border utilities */
+.border-primary {
+    border-color: var(--primary);
+}
+
+.border-accent {
+    border: 2px solid var(--primary);
+}
+
+/* Shadow utilities */
+.shadow-primary {
+    /* neutral subtle shadow utility to avoid accent glows */
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.glow {
+    /* replaced strong decorative glow with restrained elevation */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN - MOBILE FIRST
+   ============================================================================ */
+
+@media (max-width: 768px) {
+
+    /* ---- Navigation ---- */
+    nav {
+        padding: 1rem 5%;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    nav.scrolled {
+        padding: 0.8rem 5%;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 1rem;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .logo {
+        font-size: 1.25rem;
+    }
+
+    /* ---- Containers ---- */
+    .dashboard-container,
+    .admin-container {
+        padding: 2rem 5%;
+        margin-top: 100px;
+    }
+
+    /* ---- Hero Section ---- */
+    .hero {
+        padding: 8rem 5% 4rem;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem !important;
+    }
+
+    /* ---- Grid Layouts ---- */
+    .card-grid {
+        gap: 1.5rem;
+        grid-template-columns: 1fr;
+        padding-left: 5% !important;
+        padding-right: 5% !important;
+    }
+
+    .zones-grid {
+        padding: 3rem 5%;
+        gap: 1.5rem;
+    }
+
+    .dash-card {
+        padding: 1.5rem;
+    }
+
+    /* ---- Footer ---- */
+    .footer {
+        padding: 3rem 5%;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .footer .nav-links {
+        align-items: center !important;
+    }
+
+    .footer-credit {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+    }
+
+    .credit-text {
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+    }
+
+    .footer-credit {
+        grid-column: 1 / -1;
+        text-align: center;
+        opacity: 0.9;
+        margin-top: 0.5rem;
+    }
+
+    /* ---- Forms ---- */
+    .auth-container {
+        max-width: 95%;
+        padding: 1.5rem;
+    }
+
+    input,
+    select,
+    textarea {
+        padding: 0.75rem 0.85rem;
+    }
+
+    .btn {
+        padding: 0.65rem 1.25rem;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.75rem !important;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .dashboard-container,
+    .admin-container {
+        padding: 1.5rem 3%;
+    }
+
+    .card-grid {
+        gap: 1rem;
+    }
+
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .nav-links {
+        gap: 0.75rem;
+    }
+
+    nav {
+        padding: 0.75rem 3%;
+    }
+}

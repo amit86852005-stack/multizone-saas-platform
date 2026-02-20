@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Women's Career Hub | MultiZone</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <script>
+        if (!localStorage.getItem("isLoggedIn")) {
+            window.location.href = "../../auth/login.html";
+        }
+    </script>
+
+    <nav class="scrolled">
+        <a href="../../index.html" class="logo">MultiZone Career</a>
+        <div class="nav-links">
+            <a href="women-home.html">Back to Hub</a>
+            <a href="../../dashboard/dashboard.html">Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <header style="text-align: center; margin-bottom: 4rem;">
+            <h1>Career module — resources for professional development</h1>
+            <p style="color: var(--text-muted)">Manage scholarships, mentorships, and hiring opportunities. Tools include opportunity listings, mentorship scheduling, and certification catalog.</p>
+        </header>
+
+        <section class="card-grid">
+            <div class="dash-card glass reveal">
+                <i class="fas fa-university"></i>
+                <h3>Scholarships</h3>
+                <p>Global grants for STEM and leadership programs.</p>
+                 <button class="btn btn-glass" style="margin-top: 1rem; width: 100%">Open Module</button>
+            </div>
+
+            <div class="dash-card glass reveal">
+                <i class="fas fa-users"></i>
+                <h3>Mentorship Circles</h3>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Next Session: <b>Thursday,
+                        4 PM</b></div>
+                <button class="btn btn-primary" style="margin-top: 1rem; width: 100%;">Join Circle</button>
+            </div>
+
+            <div class="dash-card glass reveal">
+                <i class="fas fa-briefcase"></i>
+                <h3>DEI Hiring</h3>
+                <p>Roles from companies actively prioritizing diversity.</p>
+                <a class="btn btn-glass" style="margin-top: 1rem; width: 100%; display:inline-flex; text-align:center;" href="/jobs">Open Module</a>
+            </div>
+
+            <div class="dash-card glass reveal">
+                <i class="fas fa-award"></i>
+                <h3>Certifications</h3>
+                <p>Vetted courses to boost your leadership profile.</p>
+                    <button class="btn btn-glass" style="margin-top: 1rem; width: 100%;">Access Tools</button>
+            </div>
+        </section>
+
+        <div class="glass" style="padding: 4rem; text-align: center; margin-top: 4rem;">
+            <h2>The Leadership Network</h2>
+            <p style="color: var(--text-muted); margin: 1rem auto 2rem; max-width: 600px;">Connect directly with female
+                leaders across tech, finance, and healthcare industries.</p>
+            <button class="btn btn-primary" style="padding: 1rem 3rem;">Apply for Mentorship</button>
+        </div>
+    </main>
+
+    <script src="../../assets/js/main.js"></script>
+</body>
+
+</html>
